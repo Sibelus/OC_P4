@@ -11,23 +11,29 @@ public class FareCalculatorService {
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
         }
 
-        //Need complete dates to have a parcking duration that can be less than an hour or more than a day
+        //Need complete dates to have a parking duration that can be less than an hour or more than a day
         Date inTime = ticket.getInTime();
         Date outTime = ticket.getOutTime();
 
-        float parckingDurationInSecondes = (float) (outTime.getTime() - inTime.getTime());
-        float parckingDurationInHour = parckingDurationInSecondes/(1000*60*60);
+        float parkingDurationInSeconds = (float) (outTime.getTime() - inTime.getTime());
+        ticket.setParkingDurationInHour(parkingDurationInSeconds/(1000*60*60));
+        float parkingDuration = ticket.getParkingDurationInHour();
 
+        // Calculation of parking price according to : parking duration / regular customer / vehicle type
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
-                ticket.setPrice(parckingDurationInHour * Fare.CAR_RATE_PER_HOUR);
+                if (parkingDuration > 0.5) {
+                    ticket.setPrice(parkingDuration * Fare.CAR_RATE_PER_HOUR);
+                } else {
+                    ticket.setPrice(0);
+                }
                 break;
             }
             case BIKE: {
-                ticket.setPrice(parckingDurationInHour * Fare.BIKE_RATE_PER_HOUR);
+                ticket.setPrice(parkingDuration * Fare.BIKE_RATE_PER_HOUR);
                 break;
             }
-            default: throw new IllegalArgumentException("Unkown Parking Type");
+            default: throw new IllegalArgumentException("Unknown Parking Type");
         }
     }
 }

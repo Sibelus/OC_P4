@@ -1,6 +1,5 @@
 package com.parkit.parkingsystem.model;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class Ticket {
@@ -10,6 +9,15 @@ public class Ticket {
     private double price;
     private Date inTime;
     private Date outTime;
+
+    ////////////////
+    private float parkingDurationInHour;
+    ////////////////
+
+    ////////////////
+    public void setParkingDurationInHour(float parkingDurationInHour) { this.parkingDurationInHour = parkingDurationInHour; }
+    public float getParkingDurationInHour() { return parkingDurationInHour; }
+    ////////////////
 
     public int getId() {
         return id;
