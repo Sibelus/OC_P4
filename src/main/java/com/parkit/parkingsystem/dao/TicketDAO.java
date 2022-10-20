@@ -19,6 +19,29 @@ public class TicketDAO {
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+    public boolean checkRegularCustomer(String vehicleRegistrationNumber) {
+        Connection con = null;
+        int result = 0;
+
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_CUSTOMER);
+            ps.setString(1, vehicleRegistrationNumber);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                result = rs.getInt(1);
+            }
+            if (result > 1) {
+                return true;
+            }
+        }catch (Exception ex){
+            logger.error("Error fetching vehicle registration number",ex);
+        }finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        return false;
+    }
+
     public boolean saveTicket(Ticket ticket){
         Connection con = null;
         try {
