@@ -12,11 +12,21 @@ public class Ticket {
 
     ////////////////
     private float parkingDurationInHour;
-    ////////////////
+    private boolean regularCustomer;
 
-    ////////////////
-    public void setParkingDurationInHour(float parkingDurationInHour) { this.parkingDurationInHour = parkingDurationInHour; }
-    public float getParkingDurationInHour() { return parkingDurationInHour; }
+    public void setParkingDurationInHour(float parkingDurationInHour) {
+        this.parkingDurationInHour = parkingDurationInHour;
+    }
+    public float getParkingDurationInHour() {
+        return parkingDurationInHour;
+    }
+
+    public void setRegularCustomer(boolean regularCustomer) {
+        this.regularCustomer = regularCustomer;
+    }
+    public boolean getRegularCustomer() {
+        return regularCustomer;
+    }
     ////////////////
 
     public int getId() {
