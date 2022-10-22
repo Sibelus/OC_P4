@@ -2,21 +2,28 @@ package com.parkit.parkingsystem;
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.util.Date;
-
+@ExtendWith(MockitoExtension.class)
 public class FareCalculatorServiceTest {
 
     private static FareCalculatorService fareCalculatorService;
     private Ticket ticket;
+    @Mock
+    TicketDAO ticketDAO;
 
     @BeforeAll
     private static void setUp() {
@@ -168,26 +175,45 @@ public class FareCalculatorServiceTest {
 
     @Test
     public void calculateFareCarWithRegularUserDiscount(){
-        Ticket ticketRegularCustomer = new Ticket();
-
+        //GIVEN
         Date inTime = new Date();
         inTime.setTime( System.currentTimeMillis() - (  60 * 60 * 1000) );
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
+        when(ticketDAO.checkRegularCustomer(any(String.class))).thenReturn(true);
 
-        ticket.setVehicleRegNumber("ABCDEF");
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
+        ticket.setRegularCustomer(ticketDAO.checkRegularCustomer("ABCDEF"));
 
-        ticketRegularCustomer.setVehicleRegNumber("ABCDEF");
-        ticketRegularCustomer.setInTime(inTime);
-        ticketRegularCustomer.setOutTime(outTime);
-        ticketRegularCustomer.setParkingSpot(parkingSpot);
-
+        //WHEN
         fareCalculatorService.calculateFare(ticket);
-        fareCalculatorService.calculateFare(ticketRegularCustomer);
-        assertEquals((Fare.CAR_RATE_PER_HOUR * 95)/100, ticketRegularCustomer.getPrice());
+
+        //THEN
+        verify(ticketDAO, times(1)).checkRegularCustomer("ABCDEF");
+        assertEquals((Fare.CAR_RATE_PER_HOUR * 95)/100, ticket.getPrice());
     }
 
+    @Test
+    public void calculateFareBikeWithRegularUserDiscount(){
+        //GIVEN
+        Date inTime = new Date();
+        inTime.setTime( System.currentTimeMillis() - (  60 * 60 * 1000) );
+        Date outTime = new Date();
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE,false);
+        when(ticketDAO.checkRegularCustomer(any(String.class))).thenReturn(true);
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        ticket.setRegularCustomer(ticketDAO.checkRegularCustomer("ABCDEF"));
+
+        //WHEN
+        fareCalculatorService.calculateFare(ticket);
+
+        //THEN
+        verify(ticketDAO, times(1)).checkRegularCustomer("ABCDEF");
+        assertEquals((Fare.BIKE_RATE_PER_HOUR * 95)/100, ticket.getPrice());
+    }
 }
