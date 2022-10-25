@@ -27,6 +27,12 @@ public class ParkingService {
         this.ticketDAO = ticketDAO;
     }
 
+    /**
+     * Method that check which next parking spot is available
+     * If there is one, set is availability to false into parkingSpot object and database's table "parking"
+     * Set inTime date to define incoming time for the vehicle
+     * Then create a new ticket object and store all content into it (parkingSpot, vehicleRegNumber, inTime)
+     */
     public void processIncomingVehicle() {
         try{
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
@@ -38,7 +44,6 @@ public class ParkingService {
                 Date inTime = new Date();
                 Ticket ticket = new Ticket();
                 //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-                //ticket.setId(ticketID);
                 ticket.setParkingSpot(parkingSpot);
                 ticket.setVehicleRegNumber(vehicleRegNumber);
                 ticket.setPrice(0);
@@ -46,13 +51,12 @@ public class ParkingService {
                 ticket.setOutTime(null);
 
                 //Check if the customer is a regular one
-                //ticketDAO.checkRegularCustomer(vehicleRegNumber);
                 ticket.setRegularCustomer(ticketDAO.checkRegularCustomer(vehicleRegNumber));
                 if(ticket.getRegularCustomer()){
                     System.out.println("Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount.");
                 }
 
-
+                //Upload ticket content into database's table "ticket"
                 ticketDAO.saveTicket(ticket);
                 System.out.println("Generated Ticket and saved in DB");
                 System.out.println("Please park your vehicle in spot number:"+parkingSpot.getId());
@@ -63,11 +67,20 @@ public class ParkingService {
         }
     }
 
+    /**
+     * Method that asking to the user his vehicle plate number et get is input
+     * @return String
+     * @throws Exception
+     */
     private String getVehichleRegNumber() throws Exception {
         System.out.println("Please type the vehicle registration number and press enter key");
         return inputReaderUtil.readVehicleRegistrationNumber();
     }
 
+    /**
+     * Method that check if there is an available parkingSpot and return it
+     * @return parkingSpot
+     */
     public ParkingSpot getNextParkingNumberIfAvailable(){
         int parkingNumber=0;
         ParkingSpot parkingSpot = null;
@@ -87,6 +100,10 @@ public class ParkingService {
         return parkingSpot;
     }
 
+    /**
+     * Method that asking to the user his vehicle type et get is input
+     * @return int
+     */
     private ParkingType getVehichleType(){
         System.out.println("Please select vehicle type from menu");
         System.out.println("1 CAR");
@@ -106,6 +123,12 @@ public class ParkingService {
         }
     }
 
+    /**
+     * Method that get user's plate number
+     * With the plate number, get ticket's content from database's table "ticket"
+     * Set his outTime and calculate parking fare
+     * Then update ticket's content into database's table "ticket" and availability for the parking slot into database's table "parking"
+     */
     public void processExitingVehicle() {
         try{
             String vehicleRegNumber = getVehichleRegNumber();

@@ -19,6 +19,11 @@ public class TicketDAO {
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+    /**
+     * Method that check into the database's table "ticket" if the vehicle plate number all ready exist in another ticket
+     * @param vehicleRegistrationNumber
+     * @return boolean
+     */
     public boolean checkRegularCustomer(String vehicleRegistrationNumber) {
         Connection con = null;
         int result = 0;
@@ -42,13 +47,16 @@ public class TicketDAO {
         return false;
     }
 
+    /**
+     * Method that save ticket's content into the database's table "ticket"
+     * @param ticket
+     */
     public boolean saveTicket(Ticket ticket){
         Connection con = null;
         try {
             con = dataBaseConfig.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.SAVE_TICKET);
             //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-            //ps.setInt(1,ticket.getId());
             ps.setInt(1,ticket.getParkingSpot().getId());
             ps.setString(2, ticket.getVehicleRegNumber());
             ps.setDouble(3, ticket.getPrice());
@@ -63,6 +71,10 @@ public class TicketDAO {
         }
     }
 
+    /**
+     * Method that get ticket's content from database's table "ticket" and store it into a new ticket object
+     * @param vehicleRegNumber
+     */
     public Ticket getTicket(String vehicleRegNumber) {
         Connection con = null;
         Ticket ticket = null;
@@ -92,6 +104,10 @@ public class TicketDAO {
         }
     }
 
+    /**
+     * Method that update ticket's content into the database's table "ticket"
+     * @param ticket
+     */
     public boolean updateTicket(Ticket ticket) {
         Connection con = null;
         try {

@@ -6,6 +6,10 @@ import java.util.Date;
 
 public class FareCalculatorService {
 
+    /**
+     * Method that calculate parking price according to : parking duration / regular customer / vehicle type
+     * @param ticket
+     */
     public void calculateFare(Ticket ticket){
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());

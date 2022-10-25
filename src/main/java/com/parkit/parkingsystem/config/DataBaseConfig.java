@@ -9,6 +9,11 @@ public class DataBaseConfig {
 
     private static final Logger logger = LogManager.getLogger("DataBaseConfig");
 
+    /**
+     * Method that create a connection to the server
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         logger.info("Create DB connection");
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -16,6 +21,10 @@ public class DataBaseConfig {
                 "jdbc:mysql://localhost:3307/prod?serverTimezone=UTC","root","rootroot"); // serverTimezone need to be set to be able to use Date() objects
     }
 
+    /**
+     * Method that close a database connection
+     * @param con
+     */
     public void closeConnection(Connection con){
         if(con!=null){
             try {
@@ -27,6 +36,10 @@ public class DataBaseConfig {
         }
     }
 
+    /**
+     * Method that close a prepared statement
+     * @param ps
+     */
     public void closePreparedStatement(PreparedStatement ps) {
         if(ps!=null){
             try {
@@ -38,6 +51,10 @@ public class DataBaseConfig {
         }
     }
 
+    /**
+     * Method that close a resultSet
+     * @param rs
+     */
     public void closeResultSet(ResultSet rs) {
         if(rs!=null){
             try {

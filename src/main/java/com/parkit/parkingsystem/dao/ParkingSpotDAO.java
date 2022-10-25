@@ -16,6 +16,11 @@ public class ParkingSpotDAO {
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+    /**
+     * Method that check into the database's table "parking" if there is an available parking slot and return his PARKING_NUMBER
+     * @param parkingType
+     * @return int
+     */
     public int getNextAvailableSlot(ParkingType parkingType){
         Connection con = null;
         int result=-1;
@@ -37,8 +42,11 @@ public class ParkingSpotDAO {
         return result;
     }
 
+    /**
+     * Method that update the availability for that parking slot
+     * @param parkingSpot
+     */
     public boolean updateParking(ParkingSpot parkingSpot){
-        //update the availability fo that parking slot
         Connection con = null;
         try {
             con = dataBaseConfig.getConnection();
