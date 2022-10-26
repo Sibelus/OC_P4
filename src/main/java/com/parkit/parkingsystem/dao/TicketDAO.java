@@ -36,6 +36,8 @@ public class TicketDAO {
             if(rs.next()){
                 result = rs.getInt(1);
             }
+            dataBaseConfig.closePreparedStatement(ps);
+            dataBaseConfig.closeResultSet(rs);
             if (result > 1) {
                 return true;
             }
@@ -116,6 +118,32 @@ public class TicketDAO {
             ps.setDouble(1, ticket.getPrice());
             ps.setTimestamp(2, new Timestamp(ticket.getOutTime().getTime()));
             ps.setInt(3,ticket.getId());
+            ps.execute();
+            return true;
+        }catch (Exception ex){
+            logger.error("Error saving ticket info",ex);
+        }finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        return false;
+    }
+
+    /**
+     * Method that update ticket's content into the database's table "ticket" without any restrictions
+     * @param ticket
+     */
+    public boolean updateTicketSuperAdmin(Ticket ticket) {
+        Connection con = null;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TICKET_SUPER_ADMIN);
+            //"update ticket set PARKING_NUMBER=?, VEHICLE_REG_NUMBER=?, PRICE=?, IN_TIME=?, OUT_TIME=? where ID=?";
+            ps.setInt(1, ticket.getParkingSpot().getId());
+            ps.setString(2, ticket.getVehicleRegNumber());
+            ps.setDouble(3, ticket.getPrice());
+            ps.setTimestamp(4, new Timestamp(ticket.getInTime().getTime()));
+            ps.setTimestamp(5, new Timestamp(ticket.getOutTime().getTime()));
+            ps.setInt(6,ticket.getId());
             ps.execute();
             return true;
         }catch (Exception ex){
