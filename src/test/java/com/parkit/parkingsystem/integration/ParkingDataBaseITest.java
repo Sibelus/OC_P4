@@ -16,14 +16,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ParkingDataBaseIT {
+public class ParkingDataBaseITest {
 
     private static DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
     private static ParkingSpotDAO parkingSpotDAO;
@@ -73,9 +73,13 @@ public class ParkingDataBaseIT {
     @Test
     public void testParkingLotExit(){
         // GIVEN
-        testParkingACar();
-
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+        parkingService.processIncomingVehicle();
+        Ticket ticket = ticketDAO.getTicket("ABCDEF");
+        ticket.setInTime(new Date(System.currentTimeMillis() - (60*60*1000)));
+        ticket.setOutTime(new Date());
+        ticketDAO.updateTicketSuperAdmin(ticket);
+
         parkingService.processExitingVehicle();
         //TODO: check that the fare generated and out time are populated correctly in the database
 
@@ -83,12 +87,34 @@ public class ParkingDataBaseIT {
         Ticket returnedTicket = ticketDAO.getTicket("ABCDEF");
         Date outTimeTicket = returnedTicket.getOutTime();
 
-        Date outTime = new Date();
-        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
         // THEN
-        assertEquals(returnedTicket.getPrice(), 0);
-        assertEquals(dt.format(outTime), dt.format(outTimeTicket));
+        assertNotNull(returnedTicket.getPrice());
+        assertNotNull(outTimeTicket);
     }
 
+    @Test
+    public void testParkingLotExitForRegularCustomer(){
+        // GIVEN
+        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+        parkingService.processIncomingVehicle();
+        Ticket ticket = ticketDAO.getTicket("ABCDEF");
+        ticket.setInTime(new Date(System.currentTimeMillis() - (60*60*1000)));
+        ticket.setPrice(0);
+        ticket.setOutTime(new Date());
+        ticketDAO.updateTicketSuperAdmin(ticket);
+
+        parkingService.processIncomingVehicle();
+        Ticket ticket2 = ticketDAO.getTicket("ABCDEF");
+        ticket2.setInTime(new Date(System.currentTimeMillis() - (45*60*1000)));
+        ticket2.setOutTime(new Date());
+        ticketDAO.updateTicketSuperAdmin(ticket2);
+
+        //WHEN
+        parkingService.processExitingVehicle();
+        ticket2 = ticketDAO.getTicket("ABCDEF");
+        ticket2.setRegularCustomer(ticketDAO.checkRegularCustomer("ABCDEF"));
+
+        //THEN
+        assertEquals(true, ticket2.getRegularCustomer());
+    }
 }
