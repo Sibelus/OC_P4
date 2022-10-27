@@ -18,7 +18,7 @@ public class ParkingSpotDAO {
 
     /**
      * Method that check into the database's table "parking" if there is an available parking slot and return his PARKING_NUMBER
-     * @param parkingType
+     * @param parkingType - parking type : CAR(int=1) || BIKE(int=2)
      * @return int
      */
     public int getNextAvailableSlot(ParkingType parkingType) {
@@ -46,7 +46,7 @@ public class ParkingSpotDAO {
 
     /**
      * Method that update the availability for that parking slot
-     * @param parkingSpot
+     * @param parkingSpot - ParkingSpot(int, ParkingType, boolean -> isAvailable)
      */
     public boolean updateParking(ParkingSpot parkingSpot) {
         Connection con = null;

@@ -11,8 +11,8 @@ public class DataBaseConfig {
 
     /**
      * Method that create a connection to the server
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @throws ClassNotFoundException - throws ClassNotFound exception
+     * @throws SQLException - throws SQL exception
      */
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         logger.info("Create DB connection");
@@ -23,7 +23,7 @@ public class DataBaseConfig {
 
     /**
      * Method that close a database connection
-     * @param con
+     * @param con - connection to the database
      */
     public void closeConnection(Connection con){
         if(con!=null){
@@ -38,7 +38,7 @@ public class DataBaseConfig {
 
     /**
      * Method that close a prepared statement
-     * @param ps
+     * @param ps - prepared statement
      */
     public void closePreparedStatement(PreparedStatement ps) {
         if(ps!=null){
@@ -53,7 +53,7 @@ public class DataBaseConfig {
 
     /**
      * Method that close a resultSet
-     * @param rs
+     * @param rs - result set object
      */
     public void closeResultSet(ResultSet rs) {
         if(rs!=null){

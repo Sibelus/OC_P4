@@ -8,7 +8,7 @@ public class FareCalculatorService {
 
     /**
      * Method that calculate parking price according to : parking duration / regular customer / vehicle type
-     * @param ticket
+     * @param ticket - Ticket objet
      */
     public void calculateFare(Ticket ticket){
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){

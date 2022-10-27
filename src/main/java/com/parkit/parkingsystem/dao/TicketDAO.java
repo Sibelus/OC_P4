@@ -21,7 +21,7 @@ public class TicketDAO {
 
     /**
      * Method that check into the database's table "ticket" if the vehicle plate number all ready exist in another ticket
-     * @param vehicleRegistrationNumber
+     * @param vehicleRegistrationNumber - String that contain vehicle plate number
      * @return boolean
      */
     public boolean checkRegularCustomer(String vehicleRegistrationNumber) {
@@ -53,7 +53,7 @@ public class TicketDAO {
 
     /**
      * Method that save ticket's content into the database's table "ticket"
-     * @param ticket
+     * @param ticket - Ticket objet
      */
     public boolean saveTicket(Ticket ticket){
         Connection con = null;
@@ -74,13 +74,13 @@ public class TicketDAO {
         }finally {
             dataBaseConfig.closeConnection(con);
             dataBaseConfig.closePreparedStatement(ps);
-            return false;
         }
+        return false;
     }
 
     /**
      * Method that get ticket's content from database's table "ticket" and store it into a new ticket object
-     * @param vehicleRegNumber
+     * @param vehicleRegNumber - String that contain the vehicle's plate number
      */
     public Ticket getTicket(String vehicleRegNumber) {
         Connection con = null;
@@ -111,13 +111,13 @@ public class TicketDAO {
             dataBaseConfig.closeConnection(con);
             dataBaseConfig.closePreparedStatement(ps);
             dataBaseConfig.closeResultSet(rs);
-            return ticket;
         }
+        return ticket;
     }
 
     /**
      * Method that update ticket's content into the database's table "ticket"
-     * @param ticket
+     * @param ticket - Ticket objet
      */
     public boolean updateTicket(Ticket ticket) {
         Connection con = null;
@@ -141,7 +141,7 @@ public class TicketDAO {
 
     /**
      * Method that update ticket's content into the database's table "ticket" without any restrictions
-     * @param ticket
+     * @param ticket - Ticket objet
      */
     public boolean updateTicketSuperAdmin(Ticket ticket) {
         Connection con = null;
