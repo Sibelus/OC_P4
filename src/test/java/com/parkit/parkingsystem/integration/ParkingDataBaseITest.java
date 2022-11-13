@@ -18,8 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -115,6 +114,6 @@ public class ParkingDataBaseITest {
         ticket2.setRegularCustomer(ticketDAO.checkRegularCustomer("ABCDEF"));
 
         //THEN
-        assertEquals(true, ticket2.getRegularCustomer());
+        assertTrue( ticket2.getRegularCustomer());
     }
 }
