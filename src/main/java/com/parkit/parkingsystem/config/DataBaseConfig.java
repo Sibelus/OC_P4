@@ -3,11 +3,34 @@ package com.parkit.parkingsystem.config;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.*;
+import java.util.Properties;
 
 public class DataBaseConfig {
 
     private static final Logger logger = LogManager.getLogger("DataBaseConfig");
+
+    String url_db;
+    String user;
+    String password;
+    Properties prop = new Properties();
+
+    FileInputStream fileInputStream;
+
+    public DataBaseConfig() {
+        try {
+            fileInputStream = new FileInputStream("application.properties");
+            prop.load(fileInputStream);
+
+            url_db = prop.getProperty("url_db");
+            user = prop.getProperty("user");
+            password = prop.getProperty("password");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Method that create a connection to the server
@@ -18,7 +41,7 @@ public class DataBaseConfig {
         logger.info("Create DB connection");
         Class.forName("com.mysql.cj.jdbc.Driver");
         return DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/prod?serverTimezone=UTC","root","rootroot"); // serverTimezone need to be set to be able to use Date() objects
+                url_db,user,password); // serverTimezone need to be set to be able to use Date() objects
     }
 
     /**
